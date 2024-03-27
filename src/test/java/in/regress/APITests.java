@@ -4,8 +4,11 @@ import data.People;
 import data.PeopleCreated;
 import data.UserData;
 import data.UsersFromPage;
+import io.restassured.http.Cookie;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
+import io.restassured.response.ValidatableResponse;
+import org.jsoup.Connection;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -105,7 +108,38 @@ public class APITests {
 
     }
 
+    @Test
+    public void goWebTours() {
+
+        given()
+                .when()
+                .get("http://localhost:1080/WebTours/")
+                .then()
+                .statusCode(200);
+
+        Response response =  given()
+                .when()
+                .get("http://localhost:1080/cgi-bin/welcome.pl?signOff=true")
+                .then()
+                        .statusCode(200)
+                                .extract().response();
+        String cookies;
+        cookies = response.cookies().get("MSO");
+        System.out.println(cookies);
 
 
 
-}
+
+
+
+        given()
+
+                .when()
+                .get("http://localhost:1080/cgi-bin/nav.pl?in=home")
+                .then()
+                .statusCode(200);
+
+
+    }
+
+    }
