@@ -16,7 +16,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static in.regress.Specification.*;
+import static in.regress.Steps.*;
 import static io.restassured.RestAssured.given;
+import static io.restassured.RestAssured.requestSpecification;
 import static org.hamcrest.Matchers.*;
 
 public class APITests {
@@ -109,37 +112,33 @@ public class APITests {
     }
 
     @Test
-    public void goWebTours() {
+    public void webToursBasic() {
 
-        given()
-                .when()
-                .get("http://localhost:1080/WebTours/")
-                .then()
-                .statusCode(200);
-
-        Response response =  given()
-                .when()
-                .get("http://localhost:1080/cgi-bin/welcome.pl?signOff=true")
-                .then()
-                        .statusCode(200)
-                                .extract().response();
-        String cookies;
-        cookies = response.cookies().get("MSO");
-        System.out.println(cookies);
-
-
-
-
-
-
-        given()
-
-                .when()
-                .get("http://localhost:1080/cgi-bin/nav.pl?in=home")
-                .then()
-                .statusCode(200);
+        String sessionID = goWebTours();
+        getUserData("yvakhrushev","123123Qw!",sessionID);
 
 
     }
+
+    @Test
+    public void webToursBasicWithSpec() {
+
+        String sessionID = goWebTours(requestSpec(),responseSpec());
+        getUserData("yvakhrushev","123123Qw!",sessionID);
+
+
+    }
+
+    @Test
+    public void webToursWithDefaultSpec() {
+        installSpec(requestSpec(),responseSpec());
+        String sessionID = goWebToursDefaultSpec();
+        getUserData("yvakhrushev","123123Qw!",sessionID);
+
+
+    }
+
+
+
 
     }
